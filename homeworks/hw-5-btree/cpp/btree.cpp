@@ -222,8 +222,9 @@ void split2(btree* &parent, btree* &root, int key) {
 	btree* new_node = new btree;
 	new_node->num_keys = (order+1)/2;
 	new_node->is_leaf = true;
-	new_node->keys[0] = root->keys[3];
-	new_node->keys[1] = root->keys[4];
+	for (int j = 0; j < (order+1)/2 ; j++) {
+		new_node->keys[j] = root->keys[(order+1)/2 + 1 + j];
+	}
 	btree* parent_orig = copy_node(parent);
 	branch(parent, median);// branch parent
 	// fix original node
@@ -234,14 +235,23 @@ void split2(btree* &parent, btree* &root, int key) {
 
 	// figure out which nodes go where
 
-	// manage child pointers
-	parent->children[0]->children[0] = parent_orig->children[0];
-	parent->children[0]->children[1] = parent_orig->children[1];
-	parent->children[0]->children[2] = parent_orig->children[2];
+	// add new_node to parent orig children
+	int i = 0;
+ 	while (new_node->keys[0] > parent_orig->children[i]->keys[0]) {
+ 		i++;
+ 	}
+ 	btree* temp;
+ 	for (int j = order+2; j > i; j--) {
+ 		temp = parent_orig->children[j-1];
+ 		parent_orig->children[j] = temp;
+ 	}
+ 	parent_orig->children[i] = new_node;
+
+	for (int i = 0; i < (order+1)/2 + 1; i++) {
+		parent->children[0]->children[i] = parent_orig->children[i];
+		parent->children[1]->children[i] = parent_orig->children[(order+1)/2 + i + 1];
+	}
 	parent->children[0]->is_leaf = false;
-	parent->children[1]->children[0] = parent_orig->children[3];
-	parent->children[1]->children[1] = new_node;
-	parent->children[1]->children[2] = parent_orig->children[4];
 	parent->children[1]->is_leaf = false;
 }
 

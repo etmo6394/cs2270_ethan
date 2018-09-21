@@ -157,7 +157,6 @@ TEST_BEGIN("Insert4")
   IsTrue("Two-Tier Tree Sanity Check", !any_false(invar), "Initial Tree Incorrect");
   cout << endl;
 
-  print_tree(root);
   int height_before = 0;
   check_height(root, height_before);
   insert(root, 19);
@@ -167,7 +166,6 @@ TEST_BEGIN("Insert4")
   int height_after = 0;
   check_height(root, height_after);
   IsTrue("Height Changed?", height_before + 1 == height_after, "Tree did not grow height by one.");
-  print_tree(root);
 }TEST_END
 
 TEST_BEGIN("Remove1")
@@ -180,8 +178,11 @@ TEST_BEGIN("Remove1")
   IsTrue("Check Empty", !any_false(invar), "Default Full Leaf Root Breaks Invariant");
   check_size(root, nnodes, nkeys, true);
   int nkeys_before = nkeys;
+  cout << endl;
 
+  print_tree(root);
   remove(root, 20);
+  print_tree(root);
   check_size(root, nnodes, nkeys, true);
   IsTrue("Check Key Count", nkeys == nkeys_before - 1, "Wrong number of keys");
   nkeys_before = nkeys;
@@ -189,6 +190,7 @@ TEST_BEGIN("Remove1")
   IsTrue("Invariant Check", !any_false(invar), "Invariants Broken");
   bool ok = !private_contains(root, 20);
   IsTrue("Contains Check", ok, "Tree still contains key that was just removed");
+  cout << endl;
 
   remove(root, 10);
   check_size(root, nnodes, nkeys, true);
@@ -198,6 +200,7 @@ TEST_BEGIN("Remove1")
   IsTrue("Invariant Check", !any_false(invar), "Invariants Broken");
   ok = !private_contains(root, 10);
   IsTrue("Contains Check", ok, "Tree still contains key that was just removed");
+  cout << endl;
 
   remove(root, 40);
   check_size(root, nnodes, nkeys, true);
@@ -207,6 +210,7 @@ TEST_BEGIN("Remove1")
   IsTrue("Invariant Check", !any_false(invar), "Invariants Broken");
   ok = !private_contains(root, 40);
   IsTrue("Contains Check", ok, "Tree still contains key that was just removed");
+  cout << endl;
 
   remove(root, 30);
   check_size(root, nnodes, nkeys, true);
