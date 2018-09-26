@@ -83,6 +83,8 @@ void split2(btree* &parent, btree* &root, int key);
 
 btree* copy_node(btree* node);
 
+btree* find_remove(btree* &root, int key);
+
 void combine();
 
 #endif

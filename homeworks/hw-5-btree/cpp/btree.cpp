@@ -58,6 +58,11 @@ void insert(btree* &root, int key) {
 //    tree. (the root may change when we insert or delete)
 // -- the btree pointed to by 'root' is valid.
 void remove(btree* &root, int key) {
+	btree* node = find_remove(root, key);
+	btree* parent = NULL;
+	find_parent(root, node, parent);
+	int order = sizeof(node->keys)/sizeof(node->keys[0]) - 1; // order of root
+	// base case: remove from leaf
 
 }
 
@@ -125,6 +130,7 @@ btree* find_insert(btree* &root, int key) {
 	}
 	return temp;
 }
+
 void find_parent(btree* root, btree* node, btree* &parent) {
 	if (root->is_leaf) {
 		return;
@@ -233,8 +239,6 @@ void split2(btree* &parent, btree* &root, int key) {
 	}
 	root->num_keys = (order+1)/2;
 
-	// figure out which nodes go where
-
 	// add new_node to parent orig children
 	int i = 0;
  	while (new_node->keys[0] > parent_orig->children[i]->keys[0]) {
@@ -266,6 +270,23 @@ btree* copy_node(btree* node) {
 	}
 	new_node->children[i] = node->children[i];
 	return new_node;
+}
+
+// Find node to remove value
+btree* find_remove(btree* &root, int key) {
+	btree* temp = root;
+	if (root == NULL) {
+  		return NULL;
+  	}
+  	if (contains_key(root, key)) {
+  		return root;
+  	} else {
+  		int idx = find_subtree(root, key);
+  		if (idx != -1) {
+  			temp = find_remove(root->children[idx], key); // recurse
+  		}
+ 	}
+ 	return temp;
 }
 
 void combine() {
